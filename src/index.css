@@ -1,0 +1,18 @@
+@import "tailwindcss";
+
+
+/* Custom Pagination Lines */
+.custom-pagination .swiper-pagination-bullet {
+  width: 100px;
+  height: 2px !important;
+  border-radius: 0 !important;
+  background: rgba(255, 255, 255, 0.2) !important;
+  opacity: 1 !important;
+  margin: 0 !important;
+  transition: all 0.3s ease;
+}
+
+.custom-pagination .swiper-pagination-bullet-active {
+  background: white !important;
+  width: 150px; /* Expands when active */
+}
