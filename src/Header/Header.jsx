@@ -429,8 +429,126 @@
 
                         <NavLink to="/air" className={navStyle}>Air Solutions</NavLink>
                         <NavLink to="/computing" className={navStyle}>Computing</NavLink>
-                        <NavLink to="/accessories" className={navStyle}>Accessories</NavLink>
-                        <NavLink to="/support" className={navStyle}>Support</NavLink>
+                       
+
+  <div className="relative group">
+
+  <NavLink to="/accessories" className={navStyle}>
+    Accessories
+  </NavLink>
+
+  {/* Mega Menu */}
+  <div className="
+    absolute top-full left-1/2 -translate-x-1/2
+    hidden group-hover:block
+    w-screen
+    bg-[#f4efe9] shadow-xl
+    py-8
+    z-50
+  ">
+
+    <div className="max-w-325 mx-auto px-6">
+
+      <div className="
+        grid
+        grid-cols-1
+        sm:grid-cols-2
+        md:grid-cols-3
+        lg:grid-cols-5
+        gap-8
+        text-[14px]
+      ">
+
+        {/* Reusable link style */}
+        {/** add this above return if needed:
+         const linkStyle = "block mb-2 text-gray-700 hover:underline";
+        */}
+
+        {/* Explore */}
+        <div>
+          <h3 className="font-semibold mb-3">Explore Accessories</h3>
+          <NavLink to="/accessories" className="block mb-2 hover:underline">
+            All Accessories
+          </NavLink>
+        </div>
+
+        {/* Refrigerators */}
+        <div>
+          <h3 className="font-semibold mb-3">Refrigerators Accessories</h3>
+          <NavLink to="/accessories/refrigerators" className="block mb-2 hover:underline">All Refrigerators Accessories</NavLink>
+          <NavLink to="/accessories/refrigerators/water-filter" className="block mb-2 hover:underline">Water Filter & Filter</NavLink>
+          <NavLink to="/accessories/refrigerators/tray-basket" className="block mb-2 hover:underline">Tray & Basket</NavLink>
+          <NavLink to="/accessories/refrigerators/shelf" className="block mb-2 hover:underline">Shelf</NavLink>
+          <NavLink to="/accessories/refrigerators/others" className="block mb-2 hover:underline">Others</NavLink>
+        </div>
+
+        {/* Microwave */}
+        <div>
+          <h3 className="font-semibold mb-3">Microwave Ovens Accessories</h3>
+          <NavLink to="/accessories/microwave" className="block mb-2 hover:underline">All Microwave Ovens Accessories</NavLink>
+          <NavLink to="/accessories/microwave/tray" className="block mb-2 hover:underline">Tray</NavLink>
+        </div>
+
+        {/* Water Purifiers */}
+        <div>
+          <h3 className="font-semibold mb-3">Water Purifiers Accessories</h3>
+          <NavLink to="/accessories/water-purifiers" className="block mb-2 hover:underline">All Water Purifiers Accessories</NavLink>
+          <NavLink to="/accessories/water-purifiers/filter" className="block mb-2 hover:underline">Filter</NavLink>
+        </div>
+
+        {/* Washing Machines */}
+        <div>
+          <h3 className="font-semibold mb-3">Washing Machines Accessories</h3>
+          <NavLink to="/accessories/washing-machine" className="block mb-2 hover:underline">All Washing Machines Accessories</NavLink>
+          <NavLink to="/accessories/washing-machine/hose" className="block mb-2 hover:underline">Hose & Hose Connector</NavLink>
+          <NavLink to="/accessories/washing-machine/filter" className="block mb-2 hover:underline">Filters</NavLink>
+          <NavLink to="/accessories/washing-machine/cleaner" className="block mb-2 hover:underline">Cleaner and Others</NavLink>
+        </div>
+
+        {/* Air Conditioners */}
+        <div>
+          <h3 className="font-semibold mb-3">Air Conditioners Accessories</h3>
+          <NavLink to="/accessories/air-conditioner" className="block mb-2 hover:underline">All Air Conditioners Accessories</NavLink>
+          <NavLink to="/accessories/air-conditioner/remotes" className="block mb-2 hover:underline">Remotes</NavLink>
+          <NavLink to="/accessories/air-conditioner/others" className="block mb-2 hover:underline">Others</NavLink>
+        </div>
+
+        {/* Air Purifiers */}
+        <div>
+          <h3 className="font-semibold mb-3">Air Purifiers Accessories</h3>
+          <NavLink to="/accessories/air-purifier" className="block mb-2 hover:underline">All Air Purifiers Accessories</NavLink>
+          <NavLink to="/accessories/air-purifier/filter" className="block mb-2 hover:underline">Filters</NavLink>
+        </div>
+
+        {/* TVs */}
+        <div>
+          <h3 className="font-semibold mb-3">TVs Accessories</h3>
+          <NavLink to="/accessories/tv" className="block mb-2 hover:underline">All TVs Accessories</NavLink>
+          <NavLink to="/accessories/tv/remotes" className="block mb-2 hover:underline">Remotes</NavLink>
+          <NavLink to="/accessories/tv/others" className="block mb-2 hover:underline">Others</NavLink>
+        </div>
+
+        {/* Dishwashers */}
+        <div>
+          <h3 className="font-semibold mb-3">Dishwashers Accessories</h3>
+          <NavLink to="/accessories/dishwasher" className="block mb-2 hover:underline">All Dishwashers Accessories</NavLink>
+          <NavLink to="/accessories/dishwasher/rack" className="block mb-2 hover:underline">Rack & Basket</NavLink>
+          <NavLink to="/accessories/dishwasher/filter" className="block mb-2 hover:underline">Filter</NavLink>
+          <NavLink to="/accessories/dishwasher/others" className="block mb-2 hover:underline">Others</NavLink>
+        </div>
+
+        {/* Signage */}
+        <div>
+          <h3 className="font-semibold mb-3">Signage Accessories</h3>
+          <NavLink to="/accessories/signage" className="block mb-2 hover:underline">All Signage Accessories</NavLink>
+          <NavLink to="/accessories/signage/others" className="block mb-2 hover:underline">Others</NavLink>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+ <NavLink to="/support" className={navStyle}>Support</NavLink>
                         <NavLink to="/ai" className={navStyle}>LG AI</NavLink>
                         <NavLink to="/investor" className={navStyle}>Investor Relations</NavLink>
 

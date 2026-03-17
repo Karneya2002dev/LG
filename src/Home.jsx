@@ -5,6 +5,9 @@ import MonthPicker from './Header/MonthPicker'
 import LgStore from './Header/LgStore'
 import LgUI from './Header/LgUI'
 import Highlights from './Header/Highlights'
+import SocialMedia from './Header/SocialMedia'
+import BenefitCards from './Header/BenefitCards'
+import Help from './Header/Help'
 
 const Home = () => {
   return (
@@ -15,6 +18,9 @@ const Home = () => {
   <LgStore />
   <LgUI />
  <Highlights />
+ <SocialMedia />
+ <BenefitCards />
+ <Help />
   
   </>
   )

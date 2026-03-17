@@ -7,7 +7,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 
-import img1 from "../assets/1.jpg";
+import img1 from "../assets/111.jpg";
 import img2 from "../assets/2.png";
 import img3 from "../assets/3.png";
 
@@ -103,6 +103,7 @@ const LGLandingPage = () => {
     <nav className="py-10 px-4 md:px-20 flex flex-wrap justify-center md:flex-nowrap gap-4 md:gap-8 items-start border-t border-gray-200">
 
   <NavItem img={promoImg} label="All Promotions" to="/promotions" />
+
   <NavItem img={bestImg} label="Best Sellers" to="/best-sellers" />
   <NavItem img={latestImg} label="Shop the Latest" to="/latest" />
   <NavItem img={amcImg} label="Buy AMC" to="/amc" />

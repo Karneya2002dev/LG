@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import { FiChevronLeft, FiChevronRight, FiHeart } from "react-icons/fi";
@@ -8,18 +8,16 @@ import { FaStar } from "react-icons/fa";
 import "swiper/css";
 import "swiper/css/navigation";
 
-// Assets (Ensure these paths match your project structure)
 import tv from "../assets/tv.jpeg";
 import ac from "../assets/ac.png";
 import wash from "../assets/washing.png";
-import fridge from "../assets/fridge.png";
 
 const productsData = [
   {
     id: 1,
     category: "Best Deal",
     model: "55UAB2006LA",
-    title: "LG 139 cm (55) 4K UHD AI UA8200 Smart TV with α7 Gen5 AI Processor",
+    title: "LG 139 cm (55) 4K UHD AI UA8200 Smart TV",
     rating: 4.6,
     reviews: 154,
     variants: ["65", "55", "50", "43"],
@@ -32,7 +30,7 @@ const productsData = [
     id: 2,
     category: "Newest",
     model: "AS-Q18JNXE",
-    title: "LG 3 Star (1.5) Split AC, AI Convertible 6-in-1 Cooling, 2026 Model",
+    title: "LG 3 Star (1.5) Split AC, AI Convertible",
     rating: 4.7,
     reviews: 3,
     variants: ["1.0", "1.5", "2.0"],
@@ -45,7 +43,7 @@ const productsData = [
     id: 3,
     category: "Most Popular",
     model: "FHP1209Z5M",
-    title: "LG 9Kg Front Load Washing Machine, AI Direct Drive™, Steam™",
+    title: "LG 9Kg Front Load Washing Machine",
     rating: 4.8,
     reviews: 44,
     variants: ["7.0", "8.0", "9.0"],
@@ -56,81 +54,110 @@ const productsData = [
   }
 ];
 
-// Reusable Star Component
+// ⭐ Star Rating
 const StarRating = ({ rating }) => (
   <div className="flex gap-0.5">
     {[...Array(5)].map((_, i) => (
-      <FaStar key={i} size={11} className={i < Math.floor(rating) ? "text-yellow-400" : "text-gray-200"} />
+      <FaStar
+        key={i}
+        size={10}
+        className={i < Math.floor(rating) ? "text-yellow-400" : "text-gray-200"}
+      />
     ))}
   </div>
 );
 
+// 🛒 Product Card
 const ProductCard = ({ item, onLearnMore }) => {
-  const [selectedVariant, setSelectedVariant] = useState(item.variants[1]); // Default to second variant
+  const [selectedVariant, setSelectedVariant] = useState(item.variants[0]);
   const [isWishlisted, setIsWishlisted] = useState(false);
 
   return (
-    <div className="bg-white rounded-4xl p-7 h-155 flex flex-col relative group shadow-sm border border-transparent hover:border-gray-100 transition-all">
-      {/* Interaction Icons */}
-      <div className="absolute top-6 right-6 flex flex-col gap-4 z-10">
-        <FiHeart 
-          size={20} 
-          className={`cursor-pointer transition ${isWishlisted ? "text-red-500 fill-red-500" : "text-gray-300 hover:text-red-500"}`} 
+    <div className="bg-white rounded-3xl p-4 sm:p-5 md:p-6 flex flex-col h-full shadow-sm hover:shadow-md transition">
+
+      {/* Icons */}
+      <div className="flex justify-end gap-3 mb-2">
+        <FiHeart
+          size={18}
           onClick={() => setIsWishlisted(!isWishlisted)}
+          className={`cursor-pointer ${
+            isWishlisted ? "text-red-500 fill-red-500" : "text-gray-300"
+          }`}
         />
-        <BiGitCompare size={20} className="text-gray-300 cursor-pointer hover:text-black transition" />
+        <BiGitCompare className="text-gray-300 cursor-pointer" size={18} />
       </div>
 
-      <div className="mb-1">
-        <span className="text-red-600 text-[10px] font-extrabold tracking-widest uppercase">{item.tag}</span>
-        <div className="text-gray-400 text-[11px] font-medium mt-1 uppercase flex items-center gap-1">
-          {item.model} <span className="cursor-pointer">❐</span>
-        </div>
-      </div>
+      {/* Tag */}
+      <span className="text-[10px] text-red-600 font-bold uppercase">
+        {item.tag}
+      </span>
 
-      <h3 className="text-[17px] font-bold leading-tight mb-2 line-clamp-2 min-h-10">{item.title}</h3>
+      {/* Model */}
+      <div className="text-[11px] text-gray-400 mt-1">{item.model}</div>
 
-      <div className="flex items-center gap-1.5 mb-4">
+      {/* Title */}
+      <h3 className="text-sm sm:text-base font-semibold mt-2 line-clamp-2">
+        {item.title}
+      </h3>
+
+      {/* Rating */}
+      <div className="flex items-center gap-2 mt-2">
         <StarRating rating={item.rating} />
-        <span className="text-[11px] text-gray-500 font-bold mt-0.5">{item.rating} ({item.reviews}) ⌵</span>
+        <span className="text-xs text-gray-500">
+          {item.rating} ({item.reviews})
+        </span>
       </div>
 
-      {/* Variant Selection Logic */}
-      <div className="flex gap-1.5 mb-6">
-        {item.variants?.map((v) => (
-          <button 
-            key={v} 
+      {/* Variants */}
+      <div className="flex flex-wrap gap-2 mt-3">
+        {item.variants.map((v) => (
+          <button
+            key={v}
             onClick={() => setSelectedVariant(v)}
-            className={`min-w-9 h-6 text-[10px] font-bold border rounded flex items-center justify-center transition
-            ${selectedVariant === v ? 'border-black bg-white text-black' : 'border-gray-200 text-gray-400'}`}
+            className={`px-2 py-1 text-xs border rounded ${
+              selectedVariant === v
+                ? "border-black text-black"
+                : "border-gray-300 text-gray-400"
+            }`}
           >
             {v}
           </button>
         ))}
       </div>
 
-      <div className="flex-1 flex items-center justify-center mb-6">
-        <img src={item.img} alt={item.title} className="max-h-44 w-auto object-contain" />
+      {/* Image */}
+      <div className="flex justify-center items-center my-4">
+        <img
+          src={item.img}
+          alt={item.title}
+          className="h-28 sm:h-32 md:h-36 object-contain"
+        />
       </div>
 
+      {/* Price */}
       <div className="mt-auto">
-        <div className="text-[11px] text-gray-500 mb-1">
-          MRP (Incl. of all taxes) <span className="line-through">₹{item.mrp.toLocaleString()}</span> 
-          <span className="text-black font-bold ml-1">Save ₹{(item.mrp - item.price).toLocaleString()}</span>
-        </div>
-        <div className="text-[32px] font-black leading-none mb-1">₹{item.price.toLocaleString()}</div>
-        <div className="text-[12px] text-gray-600 font-medium mb-6 underline decoration-gray-300 underline-offset-4">
-          No Cost EMI starts from ₹{Math.round(item.price/12).toLocaleString()}/month
+        <div className="text-xs text-gray-500 line-through">
+          ₹{item.mrp.toLocaleString()}
         </div>
 
-        <div className="flex gap-2">
-          <button 
+        <div className="text-xl sm:text-2xl font-bold">
+          ₹{item.price.toLocaleString()}
+        </div>
+
+        <div className="text-xs text-gray-500 mb-3">
+          EMI ₹{Math.round(item.price / 12)}
+        </div>
+
+        {/* Buttons */}
+        <div className="flex flex-col sm:flex-row gap-2">
+          <button
             onClick={() => onLearnMore(item)}
-            className="flex-1 py-3.5 border border-gray-300 rounded-xl text-xs font-bold hover:bg-gray-50 transition"
+            className="w-full border border-gray-300 py-2 rounded-lg text-xs"
           >
             Learn More
           </button>
-          <button className="flex-1 py-3.5 bg-[#ea1917] text-white rounded-xl text-xs font-bold hover:bg-[#c41513] transition shadow-lg shadow-red-500/10">
+
+          <button className="w-full bg-red-600 text-white py-2 rounded-lg text-xs">
             Buy Now
           </button>
         </div>
@@ -139,80 +166,96 @@ const ProductCard = ({ item, onLearnMore }) => {
   );
 };
 
+// 🧠 Main Section
 const PicksForYou = () => {
   const [activeTab, setActiveTab] = useState("Best Deal");
-  const [currentIndex, setCurrentIndex] = useState(1);
   const [recentlyViewed, setRecentlyViewed] = useState([]);
-  
+  const [currentIndex, setCurrentIndex] = useState(1);
+
   const tabs = ["Best Deal", "Recently Viewed", "Most Popular", "Newest"];
 
-  // Handle Recently Viewed Logic
   const addToRecentlyViewed = (product) => {
-    setRecentlyViewed(prev => {
-      const filtered = prev.filter(p => p.id !== product.id);
-      return [product, ...filtered].slice(0, 4); // Keep last 4
+    setRecentlyViewed((prev) => {
+      const filtered = prev.filter((p) => p.id !== product.id);
+      return [product, ...filtered].slice(0, 4);
     });
   };
 
   const filteredProducts = useMemo(() => {
     if (activeTab === "Recently Viewed") return recentlyViewed;
-    return productsData.filter(p => p.category === activeTab || activeTab === "Best Deal");
+    return productsData.filter(
+      (p) => p.category === activeTab || activeTab === "Best Deal"
+    );
   }, [activeTab, recentlyViewed]);
 
   return (
-    <section className="bg-[#f4efe9] py-16 px-6 md:px-20 font-sans tracking-tight">
-      <div className="flex justify-between items-end mb-10">
+    <section className="bg-[#f4efe9] py-10 sm:py-14 px-4 sm:px-8 md:px-16">
+
+      {/* Header */}
+      <div className="flex flex-col md:flex-row md:justify-between md:items-end gap-6 mb-8">
+
         <div>
-          <h2 className="text-[42px] font-bold mb-6">PICKS FOR YOU:</h2>
-          <div className="flex gap-8">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4">
+            PICKS FOR YOU
+          </h2>
+
+          <div className="flex flex-wrap gap-4 sm:gap-6">
             {tabs.map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`pb-2 text-[15px] font-bold transition-all relative ${
-                  activeTab === tab ? "text-black" : "text-gray-400"
+                className={`text-sm font-semibold ${
+                  activeTab === tab ? "text-black border-b-2 border-red-500" : "text-gray-400"
                 }`}
               >
                 {tab}
-                {activeTab === tab && <div className="absolute bottom-0 left-0 w-full h-0.5 bg-red-600" />}
               </button>
             ))}
           </div>
         </div>
 
-        <div className="flex items-center gap-5">
-          <span className="text-2xl font-light text-gray-400">
-            <span className="text-black">{currentIndex}</span>/{filteredProducts.length || 1}
+        {/* Navigation */}
+        <div className="flex items-center justify-between md:justify-end gap-4">
+          <span className="text-gray-500 text-sm">
+            {currentIndex}/{filteredProducts.length || 1}
           </span>
+
           <div className="flex gap-2">
-            <button className="p-prev w-12 h-12 rounded-full border border-gray-300 flex items-center justify-center text-gray-300 hover:border-black hover:text-black transition">
-              <FiChevronLeft size={24} />
+            <button className="p-prev w-9 h-9 border rounded-full flex items-center justify-center">
+              <FiChevronLeft />
             </button>
-            <button className="p-next w-12 h-12 rounded-full border border-black flex items-center justify-center text-black hover:bg-black hover:text-white transition">
-              <FiChevronRight size={24} />
+            <button className="p-next w-9 h-9 border rounded-full flex items-center justify-center">
+              <FiChevronRight />
             </button>
           </div>
         </div>
       </div>
 
+      {/* Swiper */}
       {filteredProducts.length > 0 ? (
         <Swiper
           modules={[Navigation]}
           navigation={{ nextEl: ".p-next", prevEl: ".p-prev" }}
           onSlideChange={(s) => setCurrentIndex(s.realIndex + 1)}
-          spaceBetween={20}
-          slidesPerView={4}
-          breakpoints={{ 320: { slidesPerView: 1.2 }, 768: { slidesPerView: 2.5 }, 1024: { slidesPerView: 4 } }}
+          spaceBetween={16}
+          breakpoints={{
+            320: { slidesPerView: 1.2 },
+            480: { slidesPerView: 1.5 },
+            640: { slidesPerView: 2 },
+            768: { slidesPerView: 2.5 },
+            1024: { slidesPerView: 3 },
+            1280: { slidesPerView: 4 }
+          }}
         >
           {filteredProducts.map((item) => (
-            <SwiperSlide key={`${activeTab}-${item.id}`}>
+            <SwiperSlide key={item.id}>
               <ProductCard item={item} onLearnMore={addToRecentlyViewed} />
             </SwiperSlide>
           ))}
         </Swiper>
       ) : (
-        <div className="h-100 flex items-center justify-center border-2 border-dashed border-gray-200 rounded-4xl text-gray-400 font-bold">
-          No items to show in {activeTab}
+        <div className="text-center text-gray-400 py-20">
+          No items in {activeTab}
         </div>
       )}
     </section>
