@@ -1,189 +1,198 @@
-import React, { useRef, useState, useMemo } from "react";
-import { ChevronLeft, ChevronRight, Star } from "lucide-react";
+import React, { useRef, useState, useMemo, useEffect } from "react";
+import axios from "axios";
+import { ChevronLeft, ChevronRight, Star, ShoppingCart } from "lucide-react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 
-// Use placeholder if pic is not available
-import pic from "../assets/pick1.avif";
-
-const productsData = [
-  {
-    id: "CLS31460001",
-    name: "LG Washing Machine ScaleGo 3-Pack Tub Cleaner",
-    price: "₹704",
-    old: "₹799",
-    img: pic,
-    rating: 4.6,
-    tab: "deals"
-  },
-  {
-    id: "CLS31020007",
-    name: "Outdoor Air Conditioner Wall Mounting Bracket",
-    price: "₹1180",
-    old: "₹1499",
-    img: "https://www.lg.com/content/dam/channel/wcms/in/accessories_parts/lg-com/accessories/air-conditioners/others/cls31020007/gallery/air-conditioners-others-cls31020007-basic-large-image-01.jpg/jcr:content/renditions/thum-350x350.jpeg",
-    rating: 3.8,
-    tab: "deals"
-  },
-  {
-    id: "CLS31460004",
-    name: "Liquid Detergent for Cloth Washing",
-    price: "₹369",
-    old: "₹399",
-    img: "https://www.lg.com/content/dam/channel/wcms/in/accessories_parts/lg-com/accessories/washing-machine/others/cls31460004/gallery/RP-LABEL-1--450x450.jpg/jcr:content/renditions/thum-350x350.jpeg",
-    rating: 4.5,
-    tab: "popular"
-  },
-  {
-    id: "AGM75891901",
-    name: "Mineral Booster Filter for LG Purifiers",
-    price: "₹866",
-    old: "₹1199",
-    img: "https://www.lg.com/content/dam/channel/wcms/in/accessories_parts/lg-com/accessories/water-purifiers/filter/agm75891901/gallery/water-purifiers-filter-agm75891901-basic-large-01.jpg/jcr:content/renditions/thum-350x350.jpeg",
-    rating: 5.0,
-    tab: "newest"
-  },
-  // Added more items so the slider actually slides
-  { id: "X1", name: "LG Remote Control", price: "₹450", old: "₹600", img: pic, rating: 4.0, tab: "deals" },
-  { id: "X2", name: "LG Microwave Tray", price: "₹900", old: "₹1200", img: pic, rating: 4.2, tab: "deals" },
-  { id: "X3", name: "LG Filter Pro", price: "₹1500", old: "₹1800", img: pic, rating: 4.9, tab: "deals" },
-];
-
 export function PicksSection() {
+  const [productsData, setProductsData] = useState([]);
+  const [loading, setLoading] = useState(true);
   const swiperRef = useRef(null);
+
   const [activeTab, setActiveTab] = useState("deals");
   const [activeIndex, setActiveIndex] = useState(1);
   const [isBeginning, setIsBeginning] = useState(true);
   const [isEnd, setIsEnd] = useState(false);
 
-  // 🔥 Filter products based on activeTab
-  const products = useMemo(() => {
-    return productsData.filter(p => p.tab === activeTab);
-  }, [activeTab]);
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const res = await axios.get("http://localhost:5000/api/products");
+        setProductsData(res.data);
+      } catch (err) {
+        console.error("Fetch error:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProducts();
+  }, []);
 
-  const renderStars = (rating) => {
-    return [...Array(5)].map((_, i) => (
-      <Star
-        key={i}
-        size={14}
-        fill={i < Math.floor(rating) ? "#ffb400" : "none"}
-        stroke={i < Math.floor(rating) ? "#ffb400" : "#d1d5db"}
-      />
-    ));
+  const products = useMemo(() => {
+    return productsData.filter(
+      (p) => p.tab?.toLowerCase().trim() === activeTab.toLowerCase()
+    );
+  }, [productsData, activeTab]);
+
+  const renderStars = (rating = 0) => {
+    const rate = Number(rating) || 0;
+    return (
+      <div className="flex">
+        {[...Array(5)].map((_, i) => (
+          <Star
+            key={i}
+            size={12}
+            fill={i < Math.floor(rate) ? "#ffb400" : "none"}
+            stroke={i < Math.floor(rate) ? "#ffb400" : "#d1d5db"}
+          />
+        ))}
+      </div>
+    );
   };
 
-  return (
-    <div className="bg-[#e9e3da] py-12">
-      <div className="max-w-7xl mx-auto px-6">
+  if (loading) return <div className="py-20 text-center animate-pulse text-gray-400">Updating picks...</div>;
 
-        {/* Header */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
-          <div>
-            <h2 className="text-4xl font-semibold">Picks for you</h2>
-            <div className="flex gap-6 mt-4 text-sm font-semibold uppercase tracking-wider">
+  return (
+    <div className="bg-[#f8f6f3] py-16">
+      <div className="max-w-7xl mx-auto px-6">
+        
+        {/* HEADER SECTION */}
+        <div className="flex flex-col md:flex-row justify-between items-end mb-10 gap-6">
+          <div className="w-full md:w-auto">
+            <h2 className="text-4xl font-bold text-gray-900 tracking-tight">Picks for you</h2>
+            <div className="flex gap-8 mt-6 border-b border-gray-200">
               {["deals", "popular", "newest"].map((tab) => (
-                <span
+                <button
                   key={tab}
-                  onClick={() => {
-                    setActiveTab(tab);
-                    setActiveIndex(1); // Reset index on tab change
-                  }}
-                  className={`cursor-pointer pb-1 transition-all border-b-2 ${
-                    activeTab === tab ? "border-black text-black" : "border-transparent text-gray-400"
+                  onClick={() => { setActiveTab(tab); setActiveIndex(1); }}
+                  className={`pb-3 text-xs font-bold uppercase tracking-widest transition-all relative ${
+                    activeTab === tab ? "text-black" : "text-gray-400 hover:text-gray-600"
                   }`}
                 >
-                  {tab === "deals" ? "BEST DEALS" : tab === "popular" ? "Most Popular" : "NEWEST"}
-                </span>
+                  {tab}
+                  {activeTab === tab && <div className="absolute bottom-0 left-0 w-full h-0.5 bg-[#a50034]" />}
+                </button>
               ))}
             </div>
           </div>
 
-          <div className="flex items-center gap-4 self-end md:self-auto">
-            <span className="text-sm font-medium">
-              {activeIndex} / {products.length}
-            </span>
-
-            <button
-              onClick={() => swiperRef.current?.slidePrev()}
-              disabled={isBeginning}
-              className={`w-10 h-10 rounded-full border border-gray-300 flex items-center justify-center transition ${
-                isBeginning ? "opacity-30 cursor-not-allowed" : "hover:bg-white"
-              }`}
-            >
-              <ChevronLeft size={18} />
-            </button>
-
-            <button
-              onClick={() => swiperRef.current?.slideNext()}
-              disabled={isEnd}
-              className={`w-10 h-10 rounded-full border border-gray-300 flex items-center justify-center transition ${
-                isEnd ? "opacity-30 cursor-not-allowed" : "hover:bg-white"
-              }`}
-            >
-              <ChevronRight size={18} />
-            </button>
+          {/* CONTROLS */}
+          <div className="flex items-center gap-4">
+            <div className="text-xs font-mono text-gray-500 mr-2">
+              {String(products.length > 0 ? activeIndex : 0).padStart(2, '0')} / {String(products.length).padStart(2, '0')}
+            </div>
+            <div className="flex gap-2">
+              <button
+                onClick={() => swiperRef.current?.slidePrev()}
+                disabled={isBeginning}
+                className={`p-3 rounded-full border transition-all ${isBeginning ? "opacity-20" : "hover:bg-white border-gray-300 shadow-sm"}`}
+              >
+                <ChevronLeft size={20} />
+              </button>
+              <button
+                onClick={() => swiperRef.current?.slideNext()}
+                disabled={isEnd}
+                className={`p-3 rounded-full border transition-all ${isEnd ? "opacity-20" : "hover:bg-white border-gray-300 shadow-sm"}`}
+              >
+                <ChevronRight size={20} />
+              </button>
+            </div>
           </div>
         </div>
 
-        {/* Swiper */}
+        {/* SWIPER */}
         <Swiper
-          key={activeTab} 
-          spaceBetween={20}
-          slidesPerView={4}
-          onSwiper={(swiper) => {
-            swiperRef.current = swiper;
-            setIsBeginning(swiper.isBeginning);
-            setIsEnd(swiper.isEnd);
-          }}
-          onSlideChange={(swiper) => {
-            setActiveIndex(swiper.activeIndex + 1);
-            setIsBeginning(swiper.isBeginning);
-            setIsEnd(swiper.isEnd);
-          }}
+          key={activeTab}
+          spaceBetween={24}
+          onSwiper={(s) => { swiperRef.current = s; setIsBeginning(s.isBeginning); setIsEnd(s.isEnd); }}
+          onSlideChange={(s) => { setActiveIndex(s.activeIndex + 1); setIsBeginning(s.isBeginning); setIsEnd(s.isEnd); }}
           breakpoints={{
             320: { slidesPerView: 1.2 },
-            640: { slidesPerView: 2 },
+            640: { slidesPerView: 2.2 },
             1024: { slidesPerView: 3 },
             1280: { slidesPerView: 4 },
           }}
-          className="pb-4"
         >
-          {products.map((p, i) => (
-            <SwiperSlide key={p.id || i}>
-              <div className="bg-white rounded-2xl p-5 shadow-sm hover:shadow-md transition h-full flex flex-col">
-                <p className="text-[10px] text-gray-400 font-mono mb-1">{p.id || 'N/A'}</p>
+          {products.map((p) => {
+            const discount = p.old_price ? Math.round(((p.old_price - p.price) / p.old_price) * 100) : 0;
+            
+            return (
+              <SwiperSlide key={p.id || p.product_id} className="pb-4">
+                <div className="group bg-white rounded-3xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col h-full border border-transparent hover:border-gray-100">
+                  
+                  {/* TOP TAGS */}
+                  <div className="flex justify-between items-start mb-4">
+                    <span className="text-[10px] font-bold bg-gray-100 px-2 py-1 rounded text-gray-500 uppercase tracking-tighter">
+                      {p.product_id || "LG-UNIT"}
+                    </span>
+                    {discount > 0 && (
+                      <span className="text-[10px] font-bold bg-green-100 text-green-700 px-2 py-1 rounded">
+                        SAVE {discount}%
+                      </span>
+                    )}
+                  </div>
 
-                <h3 className="text-[13px] font-semibold mb-2 line-clamp-2 h-10 leading-snug">
-                  {p.name}
-                </h3>
+                  {/* IMAGE */}
+                  <div className="relative h-48 mb-6 overflow-hidden flex items-center justify-center">
+                    <img
+                      src={p.image || "/placeholder.png"}
+                      alt={p.name}
+                      className="h-full object-contain group-hover:scale-105 transition-transform duration-500"
+                    />
+                  </div>
 
-                <div className="flex items-center gap-1 mb-4">
-                  <div className="flex">{renderStars(p.rating)}</div>
-                  <span className="text-xs text-gray-400 ml-1 font-bold">{p.rating}</span>
-                </div>
-
-                <div className="grow flex items-center justify-center mb-6">
-                    <img src={p.img} alt={p.name} className="h-36 w-full object-contain" />
-                </div>
-
-                <div className="mt-auto">
-                    <p className="text-[11px] text-gray-500 mb-1">
-                      MRP (Incl. of all taxes) <span className="line-through ml-1">{p.old}</span>
+                  {/* CONTENT */}
+                  <div className="grow">
+                    <h3 className="text-sm font-bold text-gray-800 leading-tight mb-2 line-clamp-2 h-10">
+                      {p.name}
+                    </h3>
+                    
+                    {/* NEW: Description Teaser */}
+                    <p className="text-[11px] text-gray-500 line-clamp-2 mb-3 leading-relaxed">
+                      {p.description || "Premium quality accessory designed for maximum compatibility and performance."}
                     </p>
-                    <p className="text-xl font-bold mb-4">{p.price}</p>
 
-                    <div className="flex gap-2">
-                      <button className="border border-black text-black font-bold py-2 rounded-lg text-[11px] w-full hover:bg-black hover:text-white transition">
-                        Learn More
+                    <div className="flex items-center gap-2 mb-4">
+                      {renderStars(p.rating)}
+                      <span className="text-[10px] font-bold text-gray-400">({p.rating})</span>
+                    </div>
+
+                    {/* NEW: Color Selection Mockup */}
+                    {p.colors && (
+                      <div className="flex gap-1.5 mb-5">
+                        {p.colors.map((c, i) => (
+                          <div 
+                            key={i} 
+                            className="w-4 h-4 rounded-full border border-gray-200 cursor-pointer hover:ring-1 ring-offset-1 ring-gray-400"
+                            style={{ backgroundColor: c }}
+                          />
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* BOTTOM SECTION */}
+                  <div className="pt-4 border-t border-gray-50">
+                    <div className="mb-4">
+                      {p.old_price && (
+                        <span className="text-xs text-gray-400 line-through block">₹{p.old_price}</span>
+                      )}
+                      <span className="text-2xl font-black text-[#a50034]">₹{p.price}</span>
+                    </div>
+
+                    <div className="grid grid-cols-5 gap-2">
+                      <button className="col-span-4 bg-gray-900 text-white text-[10px] font-bold py-3 rounded-xl hover:bg-black transition-colors flex items-center justify-center gap-2 uppercase">
+                        <ShoppingCart size={14} /> Buy Now
                       </button>
-                      <button className="bg-[#a50034] text-white font-bold py-2 rounded-lg text-[11px] w-full hover:bg-[#87002a] transition">
-                        Buy Now
+                      <button className="col-span-1 border border-gray-200 rounded-xl flex items-center justify-center hover:bg-gray-50 transition-colors">
+                        <ChevronRight size={16} />
                       </button>
                     </div>
+                  </div>
                 </div>
-              </div>
-            </SwiperSlide>
-          ))}
+              </SwiperSlide>
+            );
+          })}
         </Swiper>
       </div>
     </div>

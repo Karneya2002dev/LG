@@ -1,29 +1,44 @@
-import React from 'react'
-import Header from './Header/Header'
-import { Route, Routes } from 'react-router-dom'
-import Home from './Home'
-import Footer from './Header/Footer'
-import FloatingButton from './Header/FloatingButton'
-import Accessories from './Accessories/Accessories'
-import LGHeroSection from './Accessories/Hero'
-import ScrollToTop from './ScrollToTop'
+import React from "react";
+import { Route, Routes } from "react-router-dom";
+import Home from "./Home";
+import LGHeroSection from "./Accessories/Hero";
+import ScrollToTop from "./ScrollToTop";
+import Admin from "./Admin/Admin";
+import MainLayout from "./MainLayout";
+import EditProduct from "./Admin/EditProduct";
+
 
 const App = () => {
   return (
-   <>
-   <ScrollToTop />
-   <Header />
-   <Routes>
-<Route path='/' element={<Home />} />
-<Route path='/accessories/' element={<LGHeroSection />} />
+    <>
+      <ScrollToTop />
 
+      <Routes>
+        {/* MAIN WEBSITE ROUTES */}
+        <Route
+          path="/"
+          element={
+            <MainLayout>
+              <Home />
+            </MainLayout>
+          }
+        />
 
-    </Routes>
-    <Footer />
-    <FloatingButton />
+        <Route
+          path="/accessories/"
+          element={
+            <MainLayout>
+              <LGHeroSection />
+            </MainLayout>
+          }
+        />
 
-   </>
-  )
-}
+        {/* ADMIN ROUTE (NO HEADER/FOOTER) */}
+        <Route path="/admin" element={<Admin />} />
+        <Route path="/admin/edit/:id" element={<EditProduct />} />
+      </Routes>
+    </>
+  );
+};
 
-export default App
+export default App;
